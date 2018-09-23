@@ -34,11 +34,13 @@ module PdfForms
     end
 
     # pdftk.fill_form '/path/to/form.pdf', '/path/to/destination.pdf', :field1 => 'value 1'
-    def fill_form(template, destination, data = {}, fill_options = {})
+    def fill_form(template, destination, data = {}, fill_options = {}, tmpdir = nil)
       q_template = normalize_path(template)
       q_destination = normalize_path(destination)
       fdf = data_format(data)
-      tmp = Tempfile.new('pdf_forms-fdf')
+      tmpargs = ['pdf_forms-dfd']
+      tmpargs << tmpdir unless tmpdir.nil?
+      tmp = Tempfile.new(*tmpargs)
       tmp.close
       fdf.save_to tmp.path
       fill_options = {:tmp_path => tmp.path}.merge(fill_options)
